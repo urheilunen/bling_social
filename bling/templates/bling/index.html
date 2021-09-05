@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for blinguser in blingusers %}
+<div>
+    <h1>{{ blinguser.nickname }}</h1>
+    <p>{{ blinguser.name }} {{ blinguser.surname }}</p>
+</div>
+{% endfor %}
+</body>
+</html>
