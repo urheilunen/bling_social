@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bling::Вход</title>
+</head>
+<body>
+<a href="{% url 'signup' %}">Регистрация</a>
+<h2>Вход</h2>
+{% if user.is_authenticated %}
+<p>{{ user.username }}, вы уже выполнили вход</p><br>
+<a href="{% url 'home' %}">Главная</a>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <input type="submit" value="Войти">
+</form>
+{% endif %}
+</body>
+</html>

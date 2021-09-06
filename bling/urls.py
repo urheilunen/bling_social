@@ -1,8 +1,10 @@
 from django.contrib import admin
-from django.urls import path
-from .views import index
+from django.contrib.auth.views import LoginView
+from django.urls import path, include
+from .views import index, user_profile, BlingPostCreateView
 
 urlpatterns = [
-    path('', index),
-    # path('admin/', admin.site.urls),
+    path('user/<str:user_id>/', user_profile, name='user_profile'),
+    path('newpost/', BlingPostCreateView.as_view(), name='newpost'),
+    path('', index, name='home'),
 ]
