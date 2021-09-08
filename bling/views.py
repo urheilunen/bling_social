@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
-from .models import BlingUser, BlingPost
+from .models import BlingPost
+from userprofile.models import UserProfile
 from .forms import BlingPostForm
 
 
@@ -17,7 +18,7 @@ def index(request):
 
 
 def user_profile(request, user_id):
-    blinguser = BlingUser.objects.get(nickname=user_id)
+    blinguser = UserProfile.objects.get(nickname=user_id)
     blingposts = BlingPost.objects.filter(author=blinguser)
     context = {'blingusers': blinguser, 'blingposts': blingposts}
     return render(request, 'bling/user_profile.html', context)

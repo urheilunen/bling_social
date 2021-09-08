@@ -2,13 +2,6 @@ from django.contrib import admin
 from .models import *
 
 
-@admin.register(BlingUser)
-class BlingUserAdmin(admin.ModelAdmin):
-    list_display = ('nickname', 'created_on', 'email')
-    list_display_links = ('nickname', 'created_on', 'email')
-    search_fields = ('nickname', 'created_on', 'email')
-
-
 @admin.register(BlingPost)
 class BlingPostAdmin(admin.ModelAdmin):
     list_display = ('author', 'created_on')
