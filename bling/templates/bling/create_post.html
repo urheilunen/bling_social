@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bling::New Post</title>
-    <a href="{% url 'home' %}">Главная</a>
-</head>
-<body>
+{% extends "layout/basic.html" %}
+
+{% block title %}Запостить{% endblock %}
+
+{% block content %}
 <h1>Новый пост</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Запостить">
 </form>
-</body>
-</html>
+{% endblock %}

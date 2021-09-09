@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bling::{{ blinguser.nickname }}</title>
-    <a href="{% url 'home' %}">Главная</a><br>
-    <a href="{% url 'newpost' %}">Новый пост</a>
-    {% if user.is_authenticated %}
-    <p>Вы: {{ user.username }} <a href="{% url 'logout' %}">Выйти</a></p>
-    {% else %}
-    <a href="{% url 'login' %}">Войти</a>
-    {% endif %}
-</head>
-<body>
+{% extends "layout/basic.html" %}
+
+{% block title %} {{ blinguser.nickname }} {% endblock %}
+
+{% block content %}
 <h1>Это страница пользователя {{ blinguser.first_name }} {{ blinguser.last_name }}</h1>
 {% for blingpost in blingposts %}
 <div>
     <h3>{{ blingpost.text }}</h3>
     <p>Автор: <a href="{% url 'user_profile' blinguser.username %}">{{ blinguser.first_name }} {{ blinguser.last_name }}</a></p>
-    <p>Дата публикации: {{ blingpost.created_on }}</p>
+    <p>Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</p>
 </div><br>
 {% endfor %}
-</body>
-</html>
+{% endblock %}
