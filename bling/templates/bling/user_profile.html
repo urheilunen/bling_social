@@ -12,11 +12,11 @@
     {% endif %}
 </head>
 <body>
-<h1>Это страница пользователя {{ blingusers.name }} {{ blingusers.surname }}</h1>
+<h1>Это страница пользователя {{ blinguser.first_name }} {{ blinguser.last_name }}</h1>
 {% for blingpost in blingposts %}
 <div>
     <h3>{{ blingpost.text }}</h3>
-    <p>Автор: <a href="{% url 'user_profile' blingusers.nickname %}">{{ blingusers.name }} {{ blingusers.surname }}</a></p>
+    <p>Автор: <a href="{% url 'user_profile' blinguser.username %}">{{ blinguser.first_name }} {{ blinguser.last_name }}</a></p>
     <p>Дата публикации: {{ blingpost.created_on }}</p>
 </div><br>
 {% endfor %}
