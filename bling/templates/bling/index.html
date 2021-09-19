@@ -4,7 +4,8 @@
 {% for blingpost in blingposts %}
 <div style="border: 1px solid black; position: relative; width: 500px">
     <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.first_name }} {{ blingpost.author.last_name }}</a> сделал пост:</h3>
-    <p>{{ blingpost.text }}</p>
+    <p>{{ blingpost.text }}</p><br>
+    <p>{{ blingpost.image.0 }}</p>
     <h5>Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
 </div><br>
 {% endfor %}
