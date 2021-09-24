@@ -3,7 +3,20 @@
 {% block title %} {{ blinguser.username }} {% endblock %}
 
 {% block content %}
-<h1>{{ blinguser.first_name }} {{ blinguser.last_name }} </h1>
+<!--now rendering this user's name-->
+{% if blinguser.first_name or blinguser.lastname %}
+        <h1>{{ blinguser.first_name }} {{ blinguser.last_name }}</h1>
+    {% else %}
+        <h1>{{ blinguser.username }}</h1>
+    {% endif %}
+<!--now rendering subscribe/unsubscribe button--><br>
+{% if not is_own_page %}
+    {% if is_current_user_subscribed %}
+        <a title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны</a>
+    {% else %}
+        <a title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
+    {% endif %}
+{% endif %}
 <div style="border: 1px solid black; position: relative; width: 500px">
     Друзья: {{ friends_amount }}
     {% if friends_amount > 0 %}
@@ -21,11 +34,14 @@
     {% endif %}
 </div>
 {% for blingpost in blingposts %}
-<div style="border: 1px solid black; position: relative; width: 500px">
+<div class="post">
     <h5>Пост от {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
     <p>{{ blingpost.text }}</p><br>
     {% if blingpost.images != None %}
         <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
+    {% endif %}
+    {% if blinguser.username == user.username %}
+        <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
     {% endif %}
 </div><br>
 {% endfor %}

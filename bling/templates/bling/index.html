@@ -2,13 +2,17 @@
 
 {% block content %}
 {% for blingpost in blingposts %}
-<div style="border: 1px solid black; position: relative; width: 500px">
-    <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.first_name }} {{ blingpost.author.last_name }}</a> сделал пост:</h3>
+<div class="post">
+    {% if blingpost.author.first_name or blingpost.author.lastname %}
+        <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.first_name }} {{ blingpost.author.last_name }}</a> сделал пост:</h3>
+    {% else %}
+        <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.username }}</a> сделал пост:</h3>
+    {% endif %}
     <p>{{ blingpost.text }}</p><br>
     {% if blingpost.images != None %}
         <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
     {% endif %}
-    <h5>Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
+    <h5 class="PostDate">Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
 </div><br>
 {% endfor %}
 {% endblock %}
