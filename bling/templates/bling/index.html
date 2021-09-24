@@ -1,18 +1,20 @@
 {% extends "layout/basic.html" %}
 
 {% block content %}
-{% for blingpost in blingposts %}
-<div class="post">
-    {% if blingpost.author.first_name or blingpost.author.lastname %}
-        <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.first_name }} {{ blingpost.author.last_name }}</a> сделал пост:</h3>
+{% if user.is_authenticated %}
+    {% if blingposts.0 %}
+        {% for blingpost in blingposts %}
+            <div class="post">
+                <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.profile }}</a> сделал пост:</h3>
+                <p>{{ blingpost.text }}</p><br>
+                {% if blingpost.images != None %}
+                    <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
+                {% endif %}
+                <h5 class="PostDate">{{ blingpost.created_on|date:"d.m.Y H:i" }}</h5>
+            </div><br>
+        {% endfor %}
     {% else %}
-        <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.username }}</a> сделал пост:</h3>
+        <p align="center">Тут пока нет постов...</p>
     {% endif %}
-    <p>{{ blingpost.text }}</p><br>
-    {% if blingpost.images != None %}
-        <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
-    {% endif %}
-    <h5 class="PostDate">Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
-</div><br>
-{% endfor %}
+{% endif %}
 {% endblock %}
