@@ -32,7 +32,7 @@ class BlingCommentAdmin(admin.ModelAdmin):
 
 
 class UserInline(admin.StackedInline):
-    model = UserProfile
+    model = Profile
     can_delete = False
     verbose_name_plural = 'Доп. информация'
 
