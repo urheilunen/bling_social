@@ -1,14 +1,48 @@
 {% extends "layout/basic.html" %}
 
-{% block title %} {{ blinguser.nickname }} {% endblock %}
+{% block title %} {{ blinguser.username }} {% endblock %}
 
 {% block content %}
-<h1>Это страница пользователя {{ blinguser.first_name }} {{ blinguser.last_name }}</h1>
+<!--now rendering this user's name-->
+{% if blinguser.first_name or blinguser.lastname %}
+        <h1>{{ blinguser.first_name }} {{ blinguser.last_name }}</h1>
+    {% else %}
+        <h1>{{ blinguser.username }}</h1>
+    {% endif %}
+<!--now rendering subscribe/unsubscribe button--><br>
+{% if not is_own_page %}
+    {% if is_current_user_subscribed %}
+        <a title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны</a>
+    {% else %}
+        <a title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
+    {% endif %}
+{% endif %}
+<div style="border: 1px solid black; position: relative; width: 500px">
+    Друзья: {{ friends_amount }}
+    {% if friends_amount > 0 %}
+        {% for friend in friends %}
+            <br><a href="{% url 'user_profile' friend.username %}">{{ friend.first_name }} {{ friend.last_name }}</a>
+        {% endfor %}
+    {% endif %}
+</div>
+<div style="border: 1px solid black; position: relative; width: 500px">
+    Подписчики: {{ subs_amount }}
+    {% if subs_amount > 0 %}
+        {% for sub in subs %}
+            <br><a href="{% url 'user_profile' sub.username %}">{{ sub.first_name }} {{ sub.last_name }}</a>
+        {% endfor %}
+    {% endif %}
+</div>
 {% for blingpost in blingposts %}
-<div>
-    <h3>{{ blingpost.text }}</h3>
-    <p>Автор: <a href="{% url 'user_profile' blinguser.username %}">{{ blinguser.first_name }} {{ blinguser.last_name }}</a></p>
-    <p>Дата публикации: {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</p>
+<div class="post">
+    <h5>Пост от {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
+    <p>{{ blingpost.text }}</p><br>
+    {% if blingpost.images != None %}
+        <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
+    {% endif %}
+    {% if blinguser.username == user.username %}
+        <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
+    {% endif %}
 </div><br>
 {% endfor %}
 {% endblock %}
