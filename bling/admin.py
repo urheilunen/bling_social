@@ -6,9 +6,15 @@ from django.contrib.auth.models import User
 
 @admin.register(BlingPost)
 class BlingPostAdmin(admin.ModelAdmin):
-    list_display = ('author', 'created_on')
-    list_display_links = ('author', )
-    search_fields = ('author', 'created_on')
+    exclude = ('author',)
+    # list_display = ('author', 'created_on')
+    # list_display_links = ('author', )
+    # search_fields = ('author', 'created_on')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(BlingImage)
@@ -26,7 +32,7 @@ class BlingCommentAdmin(admin.ModelAdmin):
 
 
 class UserInline(admin.StackedInline):
-    model = UserProfile
+    model = Profile
     can_delete = False
     verbose_name_plural = 'Доп. информация'
 

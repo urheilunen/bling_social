@@ -14,7 +14,9 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="hidden" name="next" value="{{ next }}">
+<!--    <p><label for="id_username">Имя пользователя:</label> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username"></p>-->
+<!--<p><label for="id_password">Пароль:</label> <input type="password" name="password" autocomplete="current-password" required id="id_password"></p>-->
+<!--    <input type="hidden" name="next" value="{{ next }}">-->
     <input type="submit" value="Войти">
 </form>
 {% endif %}
