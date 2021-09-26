@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Bling::Вход</title>
-</head>
-<body>
+{% extends "layout/basic.html" %}
+
+{% block title %} Вход {% endblock %}
+
+{% block content %}
 <a href="{% url 'signup' %}">Регистрация</a>
 <h2>Вход</h2>
 {% if user.is_authenticated %}
@@ -14,11 +12,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-<!--    <p><label for="id_username">Имя пользователя:</label> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username"></p>-->
-<!--<p><label for="id_password">Пароль:</label> <input type="password" name="password" autocomplete="current-password" required id="id_password"></p>-->
-<!--    <input type="hidden" name="next" value="{{ next }}">-->
     <input type="submit" value="Войти">
 </form>
 {% endif %}
-</body>
-</html>
+{% endblock %}

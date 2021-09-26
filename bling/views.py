@@ -1,11 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView, DeleteView
-from .models import BlingPost, Profile
+from django.views.generic.edit import CreateView
+from .models import BlingPost
 from django.contrib.auth.models import User
-from django.urls import reverse
-from .forms import BlingPostForm
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
+
+
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
 
 
 class BlingPostCreateView(LoginRequiredMixin, CreateView):
