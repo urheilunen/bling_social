@@ -9,7 +9,7 @@ html, body
     margin-left: auto;
     margin-right: auto;
     border-radius: 5%;
-    background-color: #fff;
+    background-color: #eee;
     filter: drop-shadow(6px 8px 22px rgba(0, 0, 0, 0.34));
 
 }
@@ -31,4 +31,82 @@ nav {
     margin-right: auto;
     font-size: 24pt;
     font-weight: bold;
+}
+.login-form
+{
+    width: 440px;
+    margin: 0 auto;
+}
+.login-form input
+{
+    display: inline-block;
+    float: left;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 0;
+}
+.login-form label
+{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 200px;
+    text-align: right;
+}
+.login-form input[type="submit"]
+{
+    margin: 0 50% 0 40%;
+}
+.login-header
+{
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 24pt;
+    font-weight: bold;
+}
+.reg-header
+{
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 24pt;
+    font-weight: bold;
+}
+.reg-form
+{
+    width: 440px;
+    margin: 0 auto;
+}
+.reg-form label
+{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 200px;
+    text-align: right;
+}
+.reg-form input
+{
+    display: inline-block;
+    float: left;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 0;
+}
+.reg-form input[type="submit"]
+{
+    margin: 0 50% 0 40%;
+}
+.reg-form span
+{
+    position: absolute;
+    display: none;
+}
+.reg-form li
+{
+    position: absolute;
+    display: none;
 }
