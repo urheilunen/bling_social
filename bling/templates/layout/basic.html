@@ -13,7 +13,7 @@
         <a href="{% url 'user_profile' user.username %}">{{ user.username }}</a> /
         <a href="{% url 'home' %}">Фидлента</a> /
         <a href="{% url 'newpost' %}">Новый пост</a> /
-        {% if user.is_superuser %}<a href="admin/">Админка</a> /{% endif %}
+        {% if user.is_superuser %}<a href="{{ HTTP_HOST }}/admin/">Админка</a> /{% endif %}
         <a href="{% url 'logout' %}">Выйти</a>
         {% else %}
         <a href="{% url 'signin' %}">Вход</a> /
