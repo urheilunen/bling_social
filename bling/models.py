@@ -41,6 +41,8 @@ class BlingPost(models.Model):
     images = models.ForeignKey('BlingImage', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Изображения')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name='Автор', null=True)
     created_on = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+    likes_amount = models.IntegerField(default=0)
+    comments_amount = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'Пост'
@@ -56,6 +58,7 @@ class BlingComment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     related_post = models.OneToOneField(BlingPost, on_delete=models.CASCADE, related_name='comments',
                                           verbose_name='Пост')
+    likes_amount = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'Комментарий'

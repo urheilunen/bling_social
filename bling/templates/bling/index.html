@@ -10,7 +10,7 @@
                 {% if blingpost.images != None %}
                     <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
                 {% endif %}
-                <h5 class="PostDate">{{ blingpost.created_on|date:"d.m.Y H:i" }}</h5>
+                <h4 class="PostDate">🕙 {{ blingpost.created_on|date:"d.m.Y H:i" }}</h4>
             </div><br>
         {% endfor %}
     {% else %}
