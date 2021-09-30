@@ -1,112 +1,231 @@
 html, body
 {
-    background-color: #78b7ff;
+    width: 100%;
+    height: 100%;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
 }
-.post
+body
 {
-    height: 200px;
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 5%;
-    background-color: #eee;
-    filter: drop-shadow(6px 8px 22px rgba(0, 0, 0, 0.34));
+    background-image: url("back.jpg");
+    background-size: cover;
+    display: block;
+}
+p{
+    font-family: SF Pro Display;
+    font-weight: 300;
+    font-size: 20px;
 
 }
-.PostDate
+h1
 {
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 43px;
+    color: #FFFFFF;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    margin-bottom: 33px;
+    margin-top: 0px;
+}
+input
+{
+    outline:none;
+    border: none;
+    width: 408px;
+    height: 44px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 26px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    font-family: SF Pro Display;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 21px;
+    text-indent: 14px;
+
+}
+.logo
+{
+    filter: drop-shadow(6px 8px 22px rgba(0, 0, 0, 0.34));
+}
+::placeholder
+{
+    text-indent: 14px;
+    font-family: SF Pro Display;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 21px;
+    color: #A8A8A8;
+}
+.loginblock
+{
+    float: right;
+    width: 477px;
+    height: 422px;
+    background: rgba(255, 255, 255, 0.54);
+    border-radius: 47px;
+    margin-right: 156px;
+}
+.EnterToAccount
+{
+    text-align: center;
+    /* background-color: blue; */
+    margin-top: 39px;
+    margin-bottom: 39px;
+    line-height: 24px;
+}
+.content
+{
+    position: relative;
+    height: 430px;
+    width: 100%;
+    top: 242px;
+}
+.OfferBox
+{
+    width: 870px;
+    margin: 0px;
+    margin-left: 156px;
+    float: left;
+}
+.container
+{
+    display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 26px;
+  margin-left: 32px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: SF Pro Display;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 25px;
+}
+.container input {
     position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+  }
+
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: rgb(74, 110, 189);
+  }
+
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #91CAFF;
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  .EnterButton
+  {
+    margin-left: 0 auto;
+    margin-right: 0 auto;
+    width: fit-content;
+    height: 45px;
+    text-indent: -2px;
+    background: #C7E8FB;
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 29px;
+  }
+  .EnterButton:hover
+  {
+      background-color: rgb(56, 159, 228);
+      color: rgb(255, 255, 255);
+      transition: 0.2s;
+      cursor: pointer;
+  }
+  .RegMessage
+  {
+    width:fit-content;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .RegMessage a
+  {
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+  }
+  .FirstTime
+  {
+      width: 200px;
+      margin: 0px;
+      display:inline;
+  }
+  .footer
+  {
+      position: absolute;
       bottom: 0;
       width: 100%;
       text-align: center;
-}
-nav {
-    width: 100%;
-    background: #ffffff;
-}
-.header
+  }
+  .FooterLogo
+  {
+      min-height: 100%;
+  }
+  .regblock
 {
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 24pt;
-    font-weight: bold;
-}
-.login-form
-{
-    width: 440px;
-    margin: 0 auto;
-}
-.login-form input
-{
-    display: inline-block;
-    float: left;
-    padding: 5px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    border: 0;
-}
-.login-form label
-{
-    display: inline-block;
-    float: left;
-    clear: left;
-    width: 200px;
-    text-align: right;
-}
-.login-form input[type="submit"]
-{
-    margin: 0 50% 0 40%;
-}
-.login-header
-{
-    width: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 24pt;
-    font-weight: bold;
-}
-.reg-header
-{
-    width: 220px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 24pt;
-    font-weight: bold;
-}
-.reg-form
-{
-    width: 440px;
-    margin: 0 auto;
-}
-.reg-form label
-{
-    display: inline-block;
-    float: left;
-    clear: left;
-    width: 200px;
-    text-align: right;
-}
-.reg-form input
-{
-    display: inline-block;
-    float: left;
-    padding: 5px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    border: 0;
-}
-.reg-form input[type="submit"]
-{
-    margin: 0 50% 0 40%;
-}
-.reg-form span
-{
-    position: absolute;
-    display: none;
-}
-.reg-form li
-{
-    position: absolute;
-    display: none;
+    float: right;
+    width: 477px;
+    height: 625px;
+    background: rgba(255, 255, 255, 0.54);
+    border-radius: 47px;
+    margin-right: 156px;
 }

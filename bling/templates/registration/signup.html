@@ -10,3 +10,59 @@
     <input type="submit">
 </form>
 {% endblock %}
+
+<!--<div class="content">-->
+<!--    <div class="OfferBox">-->
+<!--        <img src="LogoLogin.png" class="logo">-->
+<!--        <h1>BLING - новая социальная сеть, чисто “для своих”.</h1>-->
+<!--        <h1>Пройдите регистрацию и присоединяйтесь!</h1>-->
+<!--        -->
+<!--    </div>-->
+<!--    &lt;!&ndash;Начало блока с регистрацией&ndash;&gt;-->
+<!--    <div class="regblock"> -->
+<!--        <p class="EnterToAccount">Зарегистрируйтесь</p>-->
+<!--        <form method="post">-->
+<!--            &lt;!&ndash; {% csrf_token %}-->
+<!--            {{ form.as_p }} &ndash;&gt;-->
+<!--            <p><input name="FirstName" id="" placeholder="Имя" class="loginform"></p>-->
+<!--            <p><input name="" id="LastName" placeholder="Фамилия" class="loginform"></p>-->
+<!--            <p><input name="e-mail" id="" placeholder="E-mail" class="loginform"></p>-->
+<!--            <p><input type='password' name="password" id="" placeholder="Пароль" class="passwordform"></p>-->
+<!--            <p><input type='password' name="password" id="" placeholder="Повторите пароль" class="passwordform"></p>-->
+<!--            &lt;!&ndash; <input type="hidden" name="next" value="{{ next }}">-->
+<!--            <input type="submit" value="Войти" class="EnterButton"> &ndash;&gt;-->
+<!--        </form>-->
+<!--        -->
+<!--        &lt;!&ndash; Чекбокс чтоб не выходить из учётки при закрытии сайта &ndash;&gt;-->
+<!--        <label class="container">Оставаться в системе-->
+<!--            <input type="checkbox" checked="checked">-->
+<!--            <span class="checkmark"></span>-->
+<!--        </label>-->
+
+
+<!--        &lt;!&ndash; {% if user.is_authenticated %}-->
+<!--        <p class="EnterWarning">{{ user.username }}, вы уже выполнили вход</p><br>-->
+<!--        <a href="{% url 'home' %}">Главная</a>-->
+<!--        {% else %}-->
+<!--        <form method="post">-->
+<!--            {% csrf_token %}-->
+<!--            {{ form.as_p }}-->
+<!--            <input type="hidden" name="next" value="{{ next }}">-->
+<!--            <input type="submit" value="Войти" class="EnterButton">-->
+<!--        </form>-->
+<!--        {% endif %} &ndash;&gt;-->
+
+
+<!--        &lt;!&ndash; Кнопка входа и предложение регистрации &ndash;&gt;-->
+<!--        <input type="submit" value="Зарегистрироваться" class="EnterButton">-->
+<!--        <div class="RegMessage">-->
+<!--            <p class="FirstTime">Уже с нами?</p>-->
+<!--            <a href="{% url 'signup' %}">Войти в учетную запись</a>-->
+<!--        </div>-->
+<!--        </div>-->
+<!--</div>-->
+<!--    &lt;!&ndash;Конец блока с регистрацией&ndash;&gt;-->
+<!--&lt;!&ndash; Лого сайта внизу &ndash;&gt;-->
+<!--    <footer class="footer">-->
+<!--        <img src="footer logo.png" alt="" class="FooterLogo">-->
+<!--    </footer>-->
