@@ -1,66 +1,46 @@
-{% extends "layout/basic.html" %}
+{% extends "layout/basic_auth.html" %}
 
 {% block title %} Вход {% endblock %}
 
 {% block content %}
-<header class="login-header">Вход</header>
 {% if user.is_authenticated %}
 <p>{{ user.username }}, вы уже выполнили вход</p><br>
 <a href="{% url 'home' %}">Главная</a>
 {% else %}
-<form method="post" class="login-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Войти">
-</form>
+<div class="content">
+    <div class="OfferBox">
+        <img src="LogoLogin.png" class="logo">
+        <h1>BLING - новая социальная сеть, чисто “для своих”.</h1>
+        <h1>Пройдите регистрацию и присоединяйтесь!</h1>
+
+    </div>
+    <!--Начало блока с регистрацией-->
+    <div class="loginblock">
+        <p class="EnterToAccount">Войдите в учетную запись</p>
+        <form method="post">
+            {% csrf_token %}
+            <p><input name="username" id="username" placeholder="Логин или e-mail" class="loginform"></p>
+            <p><input type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
+            <!-- <input type="hidden" name="next" value="{{ next }}">
+            <input type="submit" value="Войти" class="EnterButton"> -->
+        <!-- Чекбокс чтоб не выходить из учётки при закрытии сайта -->
+        <label class="container">Оставаться в системе
+            <input type="checkbox" checked="checked">
+            <span class="checkmark"></span>
+        </label>
+        <!-- Кнопка входа и предложение регистрации -->
+        <input type="submit" value="Войти" class="EnterButton">
+        </form>
+        <div class="RegMessage">
+            <p class="FirstTime">Впервые с нами?</p>
+            <a href="{% url 'signup' %}">Зарегистрироваться</a>
+        </div>
+        </div>
+</div>
+    <!--Конец блока с регистрацией-->
+<!-- Лого сайта внизу -->
+    <footer class="footer">
+        <img src="footer logo.png" alt="" class="FooterLogo">
+    </footer>
 {% endif %}
 {% endblock %}
-
-<!--<div class="content">-->
-<!--    <div class="OfferBox">-->
-<!--        <img src="LogoLogin.png" class="logo">-->
-<!--        <h1>BLING - новая социальная сеть, чисто “для своих”.</h1>-->
-<!--        <h1>Пройдите регистрацию и присоединяйтесь!</h1>-->
-
-<!--    </div>-->
-<!--    &lt;!&ndash;Начало блока с регистрацией&ndash;&gt;-->
-<!--    <div class="loginblock">-->
-<!--        <p class="EnterToAccount">Войдите в учетную запись</p>-->
-<!--        <form method="post">-->
-<!--            &lt;!&ndash; {% csrf_token %}-->
-<!--            {{ form.as_p }} &ndash;&gt;-->
-<!--            <p><input name="login" id="" placeholder="Логин или e-mail" class="loginform"></p>-->
-<!--            <p><input type='password' name="password" id="" placeholder="Пароль" class="passwordform"></p>-->
-<!--            &lt;!&ndash; <input type="hidden" name="next" value="{{ next }}">-->
-<!--            <input type="submit" value="Войти" class="EnterButton"> &ndash;&gt;-->
-<!--        </form>-->
-
-<!--        &lt;!&ndash; Чекбокс чтоб не выходить из учётки при закрытии сайта &ndash;&gt;-->
-<!--        <label class="container">Оставаться в системе-->
-<!--            <input type="checkbox" checked="checked">-->
-<!--            <span class="checkmark"></span>-->
-<!--        </label>-->
-
-
-<!--        &lt;!&ndash; {% if user.is_authenticated %}-->
-<!--        <p class="EnterWarning">{{ user.username }}, вы уже выполнили вход</p><br>-->
-<!--        <a href="{% url 'home' %}">Главная</a>-->
-<!--        {% else %}-->
-<!--        <form method="post">-->
-<!--            {% csrf_token %}-->
-<!--            {{ form.as_p }}-->
-<!--            <input type="hidden" name="next" value="{{ next }}">-->
-<!--            <input type="submit" value="Войти" class="EnterButton">-->
-<!--        </form>-->
-<!--        {% endif %} &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; Кнопка входа и предложение регистрации &ndash;&gt;-->
-<!--        <input type="submit" value="Войти" class="EnterButton">-->
-<!--        <div class="RegMessage">-->
-<!--            <p class="FirstTime">Впервые с нами?</p>-->
-<!--            <a href="{% url 'signup' %}">Зарегистрироваться</a>-->
-<!--        </div>-->
-<!--        </div>-->
-<!--</div>-->
-<!--    &lt;!&ndash;Конец блока с регистрацией&ndash;&gt;-->

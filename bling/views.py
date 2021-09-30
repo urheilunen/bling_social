@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from .models import BlingPost
 from django.contrib.auth.models import User
@@ -31,10 +33,54 @@ class BlingPostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@login_required()
 def index(request):
-    blingposts = BlingPost.objects.all()
-    context = {'blingposts': blingposts}
-    return render(request, 'bling/index.html', context)
+    if request.method == 'GET':
+        blingposts = BlingPost.objects.all()
+        context = {'blingposts': blingposts}
+        return render(request, 'bling/index.html', context)
+
+
+def bling_signin(request):
+    if request.method == 'GET':
+        return render(request, 'registration/login.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                # logged in, redirect to feed
+                return redirect('/')
+            else:
+                return render(request, 'registration/disabled_user.html')
+        else:
+            return render(request, 'registration/invalid_login.html')
+
+
+def bling_signup(request):
+    if request.method == 'GET':
+        return render(request, 'registration/signup.html')
+    elif request.method == 'POST':
+        error_message = 'Проверьте правильность введенных данных'
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        # email = request.POST.get('email')
+        if password == password2:
+            try:
+                User.objects.get(username=username)
+                error_message = 'Имя ' + username + ' уже занято'
+            except User.DoesNotExist:
+                user = User.objects.create_user(username=username, password=password)
+                return redirect('/')
+        return render(request, 'registration/signup.html', context={'error_message': error_message})
+
+
+def bling_logout(request):
+    logout(request)
+    return redirect('/')
 
 
 def user_profile(request, user_id):
