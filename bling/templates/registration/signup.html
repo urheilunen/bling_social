@@ -20,12 +20,12 @@
         <p>{{ error_message }}</p>
         <form method="post">
              {% csrf_token %}
-            <p><input name="username" id="username" placeholder="Ник" class="loginform"></p>
+            <p><input class="non-original" name="username" id="username" placeholder="Ник" class="loginform"></p>
 <!--            <p><input name="email" id="email" placeholder="E-mail" class="loginform"></p>-->
-            <p><input type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
-            <p><input type='password' name="password2" id="password2" placeholder="Повторите пароль" class="passwordform"></p>
+            <p><input class="non-original" type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
+            <p><input class="non-original" type='password' name="password2" id="password2" placeholder="Повторите пароль" class="passwordform"></p>
             <!-- Кнопка входа -->
-            <input type="submit" value="Зарегистрироваться" class="EnterButton">
+            <input class="non-original" type="submit" value="Зарегистрироваться" class="EnterButton">
         </form>
         <!-- Предложение войти -->
         <div class="RegMessage">

@@ -17,6 +17,8 @@
         <a title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны</a>
     {% elif is_current_user_friend %}
         <a title="Удалить из друзей" href="{% url 'unsubscribe' blinguser.username %}">Вы друзья</a>
+    {% elif is_profile_user_subscribed %}
+        <a title="Подписаться в ответ" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
     {% else %}
         <a title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
     {% endif %}
@@ -48,6 +50,13 @@
     {% if blingpost.images != None %}
         <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
     {% endif %}
+    <h4 class="PostDate">
+        🕙 {{ blingpost.created_on|date:"d.m.Y H:i" }}&nbsp;&nbsp;&nbsp;&nbsp;
+        <form method="post">🖒{{ blingpost.likes_amount }}</form>&nbsp;&nbsp;&nbsp;&nbsp;
+        <form method="post">🗩{{ blingpost.comments_amount }}</form>
+    </h4>
+
+<!-- author can delete their post -->
     {% if blinguser.username == user.username %}
         <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
     {% endif %}

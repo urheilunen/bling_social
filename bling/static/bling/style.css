@@ -32,7 +32,7 @@ h1
     margin-bottom: 33px;
     margin-top: 0px;
 }
-input
+input .non-original
 {
     outline:none;
     border: none;
@@ -228,4 +228,10 @@ input
     background: rgba(255, 255, 255, 0.54);
     border-radius: 47px;
     margin-right: 156px;
+}
+
+.post {
+    background-color: #7777ff;
+    width: 50%;
+    border-radius: 10px;
 }

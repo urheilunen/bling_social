@@ -10,6 +10,7 @@ class Profile(models.Model):
     subscribers = models.ManyToManyField(User, blank=True, default=None, verbose_name='Подписчики', related_name='Подписчик')
     friends = models.ManyToManyField(User, blank=True, default=None, verbose_name='Друзья', related_name='Друг')
     profile_image = models.OneToOneField('BlingImage', default=None, null=True, blank=True, verbose_name='Ава', on_delete=models.SET_NULL)
+    liked_posts = models.ManyToManyField('BlingPost', default=None, blank=True, verbose_name='Понравившиеся посты')
 
     def __unicode__(self):
         return self.user
@@ -43,6 +44,7 @@ class BlingPost(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     likes_amount = models.IntegerField(default=0)
     comments_amount = models.IntegerField(default=0)
+    comments = models.ManyToManyField('BlingComment', default=None, blank=True, verbose_name='Комментарии')
 
     class Meta:
         verbose_name = 'Пост'
@@ -56,13 +58,14 @@ class BlingComment(models.Model):
                                  verbose_name='Изображения')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name='Автор', null=True)
     created_on = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
-    related_post = models.OneToOneField(BlingPost, on_delete=models.CASCADE, related_name='comments',
-                                          verbose_name='Пост')
     likes_amount = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text
 
 
 class BlingImage(models.Model):

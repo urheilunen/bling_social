@@ -6,10 +6,8 @@
 <h1>Новый пост</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-<!--    <label for="post_text">Текст: </label>-->
-<!--    <input type="post_text" name="text"><br><br>-->
-<!--    <input type="file" name="image"><br><br>-->
+    {{ form.text }}
+    {{ form.image }}
     <input type="submit" value="Запостить">
 </form>
 {% endblock %}

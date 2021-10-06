@@ -19,17 +19,15 @@
         <p class="EnterToAccount">Войдите в учетную запись</p>
         <form method="post">
             {% csrf_token %}
-            <p><input name="username" id="username" placeholder="Логин или e-mail" class="loginform"></p>
-            <p><input type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
-            <!-- <input type="hidden" name="next" value="{{ next }}">
-            <input type="submit" value="Войти" class="EnterButton"> -->
+            <p><input class="non-original" name="username" id="username" placeholder="Логин или e-mail" class="loginform"></p>
+            <p><input class="non-original" type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
         <!-- Чекбокс чтоб не выходить из учётки при закрытии сайта -->
         <label class="container">Оставаться в системе
-            <input type="checkbox" checked="checked">
+            <input class="non-original" type="checkbox" checked="checked">
             <span class="checkmark"></span>
         </label>
         <!-- Кнопка входа и предложение регистрации -->
-        <input type="submit" value="Войти" class="EnterButton">
+        <input class="non-original" type="submit" value="Войти" class="EnterButton">
         </form>
         <div class="RegMessage">
             <p class="FirstTime">Впервые с нами?</p>

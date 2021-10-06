@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
-from .models import BlingPost
+from .models import BlingPost, BlingComment
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -35,10 +35,34 @@ class BlingPostCreateView(LoginRequiredMixin, CreateView):
 
 @login_required()
 def index(request):
-    if request.method == 'GET':
-        blingposts = BlingPost.objects.all()
-        context = {'blingposts': blingposts}
-        return render(request, 'bling/index.html', context)
+    if request.method == 'POST':
+        if request.POST.get('like'):
+            # like button has been pressed
+            liked_post_id = request.POST.get('like')
+            liked_post = BlingPost.objects.get(pk=liked_post_id)
+
+            # check if post is already liked by request.user
+            liked_posts = request.user.profile.liked_posts.all()
+            if liked_post in liked_posts:
+                liked_post.likes_amount -= 1
+                request.user.profile.liked_posts.remove(liked_post)
+                liked_post.save()
+            else:
+                liked_post.likes_amount += 1
+                request.user.profile.liked_posts.add(liked_post)
+                liked_post.save()
+        elif request.POST.get('comment_text'):
+            # comment has been left
+            comment_text = request.POST.get('comment_text')
+            commented_post = BlingPost.objects.get(pk=request.POST.get('post_id'))
+            new_comment = BlingComment(text=comment_text, author=request.user)
+            new_comment.save()
+            commented_post.comments.add(new_comment)
+            commented_post.comments_amount = len(commented_post.comments.all())
+            commented_post.save()
+    blingposts = BlingPost.objects.all()
+    context = {'blingposts': blingposts}
+    return render(request, 'bling/index.html', context)
 
 
 def bling_signin(request):
