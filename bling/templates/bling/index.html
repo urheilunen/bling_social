@@ -10,15 +10,17 @@
                 {% if blingpost.images != None %}
                     <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
                 {% endif %}
+
+                <!-- likes & comments block -->
                 <h4 class="PostDate">
-                    🕙 {{ blingpost.created_on|date:"d.m.Y H:i" }}
+                        🕙 {{ blingpost.how_old }} назад
                     <form method="post">{% csrf_token %}
                         <button name="like" type="submit" value="{{ blingpost.pk }}">Нравится({{ blingpost.likes_amount }})</button>
                     </form>
                     Коментариев: {{ blingpost.comments_amount }}
                     {% if blingpost.comments_amount > 0 %}
                         {% for comment in blingpost.comments.all %}
-                            <br>{{ comment.author.profile }}: {{ comment }}
+                            <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }} назад)
                         {% endfor %}
                     {% endif %}
                     <form method="post">{% csrf_token %}

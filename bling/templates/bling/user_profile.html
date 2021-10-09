@@ -12,20 +12,20 @@
     {% endif %}
 
 <!--now rendering subscribe/unsubscribe button--><br>
-{% if not is_own_page %}
+<a style="background-color: #7777ff;" {% if not is_own_page %}
     {% if is_current_user_subscribed %}
-        <a title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны</a>
+        title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны
     {% elif is_current_user_friend %}
-        <a title="Удалить из друзей" href="{% url 'unsubscribe' blinguser.username %}">Вы друзья</a>
+        title="Удалить из друзей" href="{% url 'unsubscribe' blinguser.username %}">Вы друзья
     {% elif is_profile_user_subscribed %}
-        <a title="Подписаться в ответ" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
+        title="Подписаться в ответ" href="{% url 'subscribe' blinguser.username %}">Подписаться
     {% else %}
-        <a title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться</a>
+        title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться
     {% endif %}
 {% endif %}
-
+</a>
 <!--subs/friends block-->
-<div style="border: 1px solid black; position: relative; width: 500px">
+<div style="border: 1px solid black; position: relative; width: 500px; background-color: #7777ff;">
     Друзья: {{ friends_amount }}
     {% if friends_amount > 0 %}
         {% for friend in friends %}
@@ -33,7 +33,7 @@
         {% endfor %}
     {% endif %}
 </div>
-<div style="border: 1px solid black; position: relative; width: 500px">
+<div style="border: 1px solid black; position: relative; width: 500px; background-color: #7777ff;">
     Подписчики: {{ subs_amount }}
     {% if subs_amount > 0 %}
         {% for sub in subs %}
@@ -44,22 +44,36 @@
 
 <!--posts block-->
 {% for blingpost in blingposts %}
-<div class="post">
-    <h5>Пост от {{ blingpost.created_on|date:"d.m.Y H:i:s" }}</h5>
-    <p>{{ blingpost.text }}</p><br>
-    {% if blingpost.images != None %}
-        <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
-    {% endif %}
-    <h4 class="PostDate">
-        🕙 {{ blingpost.created_on|date:"d.m.Y H:i" }}&nbsp;&nbsp;&nbsp;&nbsp;
-        <form method="post">🖒{{ blingpost.likes_amount }}</form>&nbsp;&nbsp;&nbsp;&nbsp;
-        <form method="post">🗩{{ blingpost.comments_amount }}</form>
-    </h4>
+            <div class="post">
+                <h3><a href="{% url 'user_profile' blingpost.author.username %}">{{ blingpost.author.profile }}</a> сделал пост:</h3>
+                <p>{{ blingpost.text }}</p><br>
+                {% if blingpost.images != None %}
+                    <img src="{{ MEDIA_ROOT }}{{ blingpost.images.image.url }}" width="200px">
+                {% endif %}
 
-<!-- author can delete their post -->
-    {% if blinguser.username == user.username %}
-        <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
-    {% endif %}
+                <!-- likes & comments block -->
+                <h4 class="PostDate">
+                        🕙 {{ blingpost.how_old }} назад
+                    <form method="post">{% csrf_token %}
+                        <button name="like" type="submit" value="{{ blingpost.pk }}">Нравится({{ blingpost.likes_amount }})</button>
+                    </form>
+                    Коментариев: {{ blingpost.comments_amount }}
+                    {% if blingpost.comments_amount > 0 %}
+                        {% for comment in blingpost.comments.all %}
+                    <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }} назад)
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post">{% csrf_token %}
+                        <input type="text" name="comment_text" placeholder="Комментировать...">
+                        <button name="post_id" type="submit" value="{{ blingpost.pk }}">Отправить</button>
+                    </form>
+                </h4>
+
+                <!-- author can delete their post -->
+                {% if blinguser.username == user.username %}
+                    <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
+                {% endif %}
+            </div><br>
+        {% endfor %}
 </div><br>
-{% endfor %}
 {% endblock %}

@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('user/<str:user_id>/', user_profile, name='user_profile'),
+    path('notifications/', notifications, name='notifications'),
     path('newpost/', BlingPostCreateView.as_view(), name='newpost'),
     path('removepost/<int:post_id>/', remove_post, name='remove_post'),
     path('subscribe/<str:subscribant_username>/', subscribe, name='subscribe'),

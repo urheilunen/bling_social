@@ -1,0 +1,17 @@
+{% extends "layout/basic.html" %}
+
+{% block title %} Ваши уведомления {% endblock %}
+
+{% block content %}
+    {% for n in notifications_list %}
+        <br><div style="background-color: #7799ff;">
+            {% if n.is_seen == False %}(!){% endif %}
+            <a href="{% url 'user_profile' n.sender.username %}">{{ n.sender }}</a>
+            {{ n.text }}
+            {% if n.related_post %}
+                "{{ n.related_post }}"
+            {% endif %}
+            ({{ n.how_old }} назад)
+        </div><br>
+    {% endfor %}
+{% endblock %}

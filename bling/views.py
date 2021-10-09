@@ -4,11 +4,44 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
-from .models import BlingPost, BlingComment
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from .models import BlingPost, BlingComment, BlingNotification
+from copy import deepcopy
+import datetime
+
+
+def scan_for_likes_and_comments(request):
+    if request.method == 'POST':
+        if request.POST.get('like'):
+            # like button has been pressed
+            liked_post_id = request.POST.get('like')
+            liked_post = BlingPost.objects.get(pk=liked_post_id)
+
+            # check if post is already liked by request.user
+            liked_posts = request.user.profile.liked_posts.all()
+            if liked_post in liked_posts:
+                liked_post.likes_amount -= 1
+                request.user.profile.liked_posts.remove(liked_post)
+                liked_post.save()
+                liked_post.author.profile.create_notification(request.user, 'больше не нравится ваш пост', related_post=liked_post)
+            else:
+                liked_post.likes_amount += 1
+                request.user.profile.liked_posts.add(liked_post)
+                liked_post.save()
+                liked_post.author.profile.create_notification(request.user, 'оценил(-а) ваш пост', related_post=liked_post)
+        elif request.POST.get('comment_text'):
+            # comment has been left
+            comment_text = request.POST.get('comment_text')
+            commented_post = BlingPost.objects.get(pk=request.POST.get('post_id'))
+            new_comment = BlingComment(text=comment_text, author=request.user)
+            new_comment.save()
+            commented_post.comments.add(new_comment)
+            commented_post.comments_amount = len(commented_post.comments.all())
+            commented_post.save()
+            commented_post.author.create_notification(request.user, 'оставил(-а) комментарий под вашим постом', related_post=commented_post)
 
 
 class SignUpView(generic.CreateView):
@@ -31,38 +64,6 @@ class BlingPostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
-
-@login_required()
-def index(request):
-    if request.method == 'POST':
-        if request.POST.get('like'):
-            # like button has been pressed
-            liked_post_id = request.POST.get('like')
-            liked_post = BlingPost.objects.get(pk=liked_post_id)
-
-            # check if post is already liked by request.user
-            liked_posts = request.user.profile.liked_posts.all()
-            if liked_post in liked_posts:
-                liked_post.likes_amount -= 1
-                request.user.profile.liked_posts.remove(liked_post)
-                liked_post.save()
-            else:
-                liked_post.likes_amount += 1
-                request.user.profile.liked_posts.add(liked_post)
-                liked_post.save()
-        elif request.POST.get('comment_text'):
-            # comment has been left
-            comment_text = request.POST.get('comment_text')
-            commented_post = BlingPost.objects.get(pk=request.POST.get('post_id'))
-            new_comment = BlingComment(text=comment_text, author=request.user)
-            new_comment.save()
-            commented_post.comments.add(new_comment)
-            commented_post.comments_amount = len(commented_post.comments.all())
-            commented_post.save()
-    blingposts = BlingPost.objects.all()
-    context = {'blingposts': blingposts}
-    return render(request, 'bling/index.html', context)
 
 
 def bling_signin(request):
@@ -107,7 +108,16 @@ def bling_logout(request):
     return redirect('/')
 
 
+@login_required()
+def index(request):
+    scan_for_likes_and_comments(request)
+    blingposts = BlingPost.objects.all()
+    context = {'blingposts': blingposts}
+    return render(request, 'bling/index.html', context)
+
+
 def user_profile(request, user_id):
+    scan_for_likes_and_comments(request)
     blinguser = User.objects.get(username=user_id)
     # get friends list and amount
     friends = blinguser.profile.friends.all()
@@ -127,7 +137,7 @@ def user_profile(request, user_id):
     else:
         # it's someone else's page, user can (un)subscribe
         is_own_page = False
-        # check if current user is subscribed/friended to this user to decide which button to render
+        # check if request user is subscribed/friended to this user to decide which button to render
         if request.user in subs:
             is_current_user_subscribed = True
             is_current_user_friend = False
@@ -144,6 +154,7 @@ def user_profile(request, user_id):
     if subs_amount > 3:
         subs = subs[:3]
 
+    # UPD: "current user" means request.user
     context = {
         'blinguser': blinguser,
         'blingposts': blingposts,
@@ -201,10 +212,12 @@ def subscribe(request, subscribant_username):
             # ...to make them friends
             subscribant_user.profile.friends.add(request.user)
             request.user.profile.friends.add(subscribant_user)
+            subscribant_user.profile.create_notification(request.user, 'подписался(-ась) на вас в ответ')
             return redirect(new_url)
 
         # not sub-ed, not friends, just a pure subscription
         subscribant_user.profile.subscribers.add(request.user)
+        subscribant_user.profile.create_notification(request.user, 'подписался(-ась) на вас')
         return redirect(new_url)
     except User.DoesNotExist:
         return HttpResponseNotFound("<h2>User not found</h2>")
@@ -232,10 +245,32 @@ def unsubscribe(request, subscribant_username):
             request.user.profile.friends.remove(subscribant_user)
             # ...and just subscribe sub-nt to request.user
             request.user.profile.subscribers.add(subscribant_user)
+            subscribant_user.profile.create_notification(request.user, 'и вы больше не друзья')
             return redirect(new_url)
 
         # not friends, request.user is just sub-ed to sub-nt, just pure unsubscription
         subscribant_user.profile.subscribers.remove(request.user)
+        subscribant_user.profile.create_notification(request.user, 'отписался(-ась) от вас')
         return redirect(new_url)
     except User.DoesNotExist:
         return HttpResponseNotFound("<h2>User not found</h2>")
+
+
+@login_required()
+def notifications(request):
+    notifications_list = []
+    for n in BlingNotification.objects.all():
+        if n.target_user == request.user:
+            if (datetime.datetime.now().timestamp() - n.created_on.timestamp()) > 604800.0:
+                n.delete()
+            else:
+                notifications_list.append(deepcopy(n))
+                n.is_seen = True
+                n.save()
+    request.user.profile.notifications_amount = 0
+    request.user.profile.save()
+    context = {
+        'notifications_list': notifications_list,
+    }
+    return render(request, 'bling/notifications.html', context)
+

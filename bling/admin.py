@@ -31,6 +31,13 @@ class BlingCommentAdmin(admin.ModelAdmin):
     search_fields = ('author', 'created_on')
 
 
+@admin.register(BlingNotification)
+class BlingNotificationAdmin(admin.ModelAdmin):
+    list_display = ('target_user', 'sender', 'text')
+    list_display_links = ('target_user', 'sender', 'text')
+    search_fields = ('target_user', 'sender', 'text')
+
+
 class UserInline(admin.StackedInline):
     model = Profile
     can_delete = False
