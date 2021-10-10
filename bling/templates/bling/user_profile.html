@@ -12,18 +12,22 @@
     {% endif %}
 
 <!--now rendering subscribe/unsubscribe button--><br>
-<a style="background-color: #7777ff;" {% if not is_own_page %}
-    {% if is_current_user_subscribed %}
-        title="Отменить подписку" href="{% url 'unsubscribe' blinguser.username %}">Вы подписаны
-    {% elif is_current_user_friend %}
-        title="Удалить из друзей" href="{% url 'unsubscribe' blinguser.username %}">Вы друзья
-    {% elif is_profile_user_subscribed %}
-        title="Подписаться в ответ" href="{% url 'subscribe' blinguser.username %}">Подписаться
-    {% else %}
-        title="Подписаться" href="{% url 'subscribe' blinguser.username %}">Подписаться
-    {% endif %}
+{% if request.user != blinguser %}
+    <form method="post">{% csrf_token %}
+
+        {% if is_current_user_subscribed %}
+            <button name="unsubscribe" type="submit" value="{{ blinguser.pk }}">Отменить подписку</button>
+        {% elif is_current_user_friend %}
+            <button name="unsubscribe" type="submit" value="{{ blinguser.pk }}">Удалить из друзей</button>
+        {% elif is_profile_user_subscribed %}
+            <button name="subscribe" type="submit" value="{{ blinguser.pk }}">Подписаться в ответ</button>
+        {% else %}
+            <button name="subscribe" type="submit" value="{{ blinguser.pk }}">Подписаться</button>
+        {% endif %}
+
+    </form>
 {% endif %}
-</a>
+
 <!--subs/friends block-->
 <div style="border: 1px solid black; position: relative; width: 500px; background-color: #7777ff;">
     Друзья: {{ friends_amount }}
