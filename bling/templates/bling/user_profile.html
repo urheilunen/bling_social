@@ -46,11 +46,12 @@
     {% endif %}
 </div>
 
-<br>
+{% if blinguser.pk == user.pk %}<br>
 <form method="post">{% csrf_token %}
     <input type="text" name="new_post" placeholder="Что у вас нового?">
     <button name="post_id" type="submit" value="{{ blingpost.pk }}">Запостить</button>
 </form>
+{% endif %}
 <!--posts block-->
 {% for blingpost in blingposts %}
             <div class="post">
