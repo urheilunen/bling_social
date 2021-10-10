@@ -112,22 +112,6 @@ def scan_for_forms(request):
             post_to_delete.delete()
 
 
-class BlingPostCreateView(LoginRequiredMixin, CreateView):
-    model = BlingPost
-    fields = ['text', 'images']
-    template_name = 'bling/create_post.html'
-    # form_class = BlingPostForm
-    success_url = '/'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-
 def bling_signin(request):
     WELCOME_MESSAGE = 'Войдите в учетную запись'
     WRONG_LOGIN_OR_PASSWORD_MESSAGE = 'Неверное имя пользователя или пароль'
