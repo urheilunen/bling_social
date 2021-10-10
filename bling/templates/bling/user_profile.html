@@ -70,7 +70,12 @@
                     Коментариев: {{ blingpost.comments_amount }}
                     {% if blingpost.comments_amount > 0 %}
                         {% for comment in blingpost.comments.all %}
-                    <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }})
+                            <form method="post">{% csrf_token %}
+                                <a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }})
+                                {% if comment.author == user %}
+                                    <button type="submit" name="remove_comment" value="{{ blingpost.pk }}/{{ comment.pk }}">удалить</button>
+                                {% endif %}
+                            </form>
                         {% endfor %}
                     {% endif %}
                     <form method="post">{% csrf_token %}

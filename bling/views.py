@@ -40,8 +40,9 @@ def scan_for_forms(request):
         commented_post.comments.add(new_comment)
         commented_post.comments_amount = len(commented_post.comments.all())
         commented_post.save()
-        commented_post.author.profile.create_notification(request.user, 'оставил(-а) комментарий под вашим постом',
-                                                          related_post=commented_post)
+        if request.user != commented_post.author:
+            commented_post.author.profile.create_notification(request.user, 'оставил(-а) комментарий под вашим постом',
+                                                              related_post=commented_post)
 
     # new post has been created
     elif request.POST.get('new_post'):
@@ -110,6 +111,19 @@ def scan_for_forms(request):
             for comment in post_to_delete.comments.all():
                 comment.delete()
             post_to_delete.delete()
+
+    # remove_comment button has been pressed
+    elif request.POST.get('remove_comment'):
+        comment_to_delete = BlingComment.objects.get(pk=int(request.POST.get('remove_comment').split('/')[1]))
+        if comment_to_delete.author == request.user:
+            comment_to_delete.delete()
+            post = BlingPost.objects.get(pk=int(request.POST.get('remove_comment').split('/')[0]))
+            post.comments_amount -= 1
+            post.save()
+            if request.user != post.author:
+                post.author.profile.create_notification(request.user,
+                                                        'удалил свой комментарий под вашим постом',
+                                                        related_post=post)
 
 
 def bling_signin(request):
