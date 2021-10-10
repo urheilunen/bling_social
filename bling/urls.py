@@ -14,8 +14,6 @@ urlpatterns = [
     path('signup/', bling_signup, name='signup'),  # register
     path('signin/', bling_signin, name='signin'),  # login
     path('logout', bling_logout, name='logout'),
-    # path('like/<int:post_id>/', like_post, name='like_post'),
-    # path('comment/<str:src_page>/<int:post_id>/', comment_post, name='comment_post'),
     path('', index, name='home'),
 ]
 

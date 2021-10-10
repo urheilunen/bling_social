@@ -53,14 +53,14 @@
 
                 <!-- likes & comments block -->
                 <h4 class="PostDate">
-                        🕙 {{ blingpost.how_old }} назад
+                        🕙 {{ blingpost.how_old }}
                     <form method="post">{% csrf_token %}
                         <button name="like" type="submit" value="{{ blingpost.pk }}">Нравится({{ blingpost.likes_amount }})</button>
                     </form>
                     Коментариев: {{ blingpost.comments_amount }}
                     {% if blingpost.comments_amount > 0 %}
                         {% for comment in blingpost.comments.all %}
-                    <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }} назад)
+                    <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }})
                         {% endfor %}
                     {% endif %}
                     <form method="post">{% csrf_token %}

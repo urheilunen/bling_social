@@ -2,6 +2,10 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+    <br><form method="post" align="center">{% csrf_token %}
+        <input type="text" name="new_post" placeholder="Что у вас нового?">
+        <button name="post_id" type="submit" value="{{ blingpost.pk }}">Запостить</button>
+    </form>
     {% if blingposts.0 %}
         {% for blingpost in blingposts %}
             <div class="post">
@@ -13,14 +17,14 @@
 
                 <!-- likes & comments block -->
                 <h4 class="PostDate">
-                        🕙 {{ blingpost.how_old }} назад
+                        🕙 {{ blingpost.how_old }}
                     <form method="post">{% csrf_token %}
                         <button name="like" type="submit" value="{{ blingpost.pk }}">Нравится({{ blingpost.likes_amount }})</button>
                     </form>
                     Коментариев: {{ blingpost.comments_amount }}
                     {% if blingpost.comments_amount > 0 %}
                         {% for comment in blingpost.comments.all %}
-                            <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }} назад)
+                            <br><a href="{% url 'user_profile' comment.author.username %}">{{ comment.author.profile }}</a>: {{ comment }} ({{ comment.how_old }})
                         {% endfor %}
                     {% endif %}
                     <form method="post">{% csrf_token %}

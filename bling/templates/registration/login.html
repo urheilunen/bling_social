@@ -16,7 +16,7 @@
     </div>
     <!--Начало блока с регистрацией-->
     <div class="loginblock">
-        <p class="EnterToAccount">Войдите в учетную запись</p>
+        <p class="EnterToAccount">{{ greeting_message }}</p>
         <form method="post">
             {% csrf_token %}
             <p><input class="non-original" name="username" id="username" placeholder="Логин или e-mail" class="loginform"></p>

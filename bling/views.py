@@ -1,53 +1,49 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseNotAllowed, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views import generic
 from .models import BlingPost, BlingComment, BlingNotification
 from copy import deepcopy
 import datetime
 
 
-def scan_for_likes_and_comments(request):
-    if request.method == 'POST':
-        if request.POST.get('like'):
-            # like button has been pressed
-            liked_post_id = request.POST.get('like')
-            liked_post = BlingPost.objects.get(pk=liked_post_id)
+def scan_for_forms(request):
+    if request.POST.get('like'):
+        # like button has been pressed
+        liked_post_id = request.POST.get('like')
+        liked_post = BlingPost.objects.get(pk=liked_post_id)
 
-            # check if post is already liked by request.user
-            liked_posts = request.user.profile.liked_posts.all()
-            if liked_post in liked_posts:
-                liked_post.likes_amount -= 1
-                request.user.profile.liked_posts.remove(liked_post)
-                liked_post.save()
-                liked_post.author.profile.create_notification(request.user, 'больше не нравится ваш пост', related_post=liked_post)
-            else:
-                liked_post.likes_amount += 1
-                request.user.profile.liked_posts.add(liked_post)
-                liked_post.save()
-                liked_post.author.profile.create_notification(request.user, 'оценил(-а) ваш пост', related_post=liked_post)
-        elif request.POST.get('comment_text'):
-            # comment has been left
-            comment_text = request.POST.get('comment_text')
-            commented_post = BlingPost.objects.get(pk=request.POST.get('post_id'))
-            new_comment = BlingComment(text=comment_text, author=request.user)
-            new_comment.save()
-            commented_post.comments.add(new_comment)
-            commented_post.comments_amount = len(commented_post.comments.all())
-            commented_post.save()
-            commented_post.author.create_notification(request.user, 'оставил(-а) комментарий под вашим постом', related_post=commented_post)
-
-
-class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
+        # check if post is already liked by request.user
+        liked_posts = request.user.profile.liked_posts.all()
+        if liked_post in liked_posts:
+            liked_post.likes_amount -= 1
+            request.user.profile.liked_posts.remove(liked_post)
+            liked_post.save()
+            liked_post.author.profile.create_notification(request.user, 'больше не нравится ваш пост', related_post=liked_post)
+        else:
+            liked_post.likes_amount += 1
+            request.user.profile.liked_posts.add(liked_post)
+            liked_post.save()
+            liked_post.author.profile.create_notification(request.user, 'оценил(-а) ваш пост', related_post=liked_post)
+    elif request.POST.get('comment_text'):
+        # comment has been left
+        comment_text = request.POST.get('comment_text')
+        commented_post = BlingPost.objects.get(pk=request.POST.get('post_id'))
+        new_comment = BlingComment(text=comment_text, author=request.user)
+        new_comment.save()
+        commented_post.comments.add(new_comment)
+        commented_post.comments_amount = len(commented_post.comments.all())
+        commented_post.save()
+        commented_post.author.profile.create_notification(request.user, 'оставил(-а) комментарий под вашим постом', related_post=commented_post)
+    elif request.POST.get('new_post'):
+        new_post = BlingPost(text=request.POST.get('new_post'), author=request.user)
+        new_post.save()
 
 
 class BlingPostCreateView(LoginRequiredMixin, CreateView):
@@ -67,8 +63,11 @@ class BlingPostCreateView(LoginRequiredMixin, CreateView):
 
 
 def bling_signin(request):
+    WELCOME_MESSAGE = 'Войдите в учетную запись'
+    WRONG_LOGIN_OR_PASSWORD_MESSAGE = 'Неверное имя пользователя или пароль'
+    DISABLED_USER_MESSAGE = 'Ошибка входа. Обратитесь к администратору сайта'
     if request.method == 'GET':
-        return render(request, 'registration/login.html')
+        return render(request, 'registration/login.html', {'greeting_message': WELCOME_MESSAGE})
     elif request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -79,16 +78,16 @@ def bling_signin(request):
                 # logged in, redirect to feed
                 return redirect('/')
             else:
-                return render(request, 'registration/disabled_user.html')
+                return render(request, 'registration/login.html', {'greeting_message': DISABLED_USER_MESSAGE})
         else:
-            return render(request, 'registration/invalid_login.html')
+            return render(request, 'registration/login.html', {'greeting_message': WRONG_LOGIN_OR_PASSWORD_MESSAGE})
 
 
 def bling_signup(request):
     if request.method == 'GET':
         return render(request, 'registration/signup.html')
     elif request.method == 'POST':
-        error_message = 'Проверьте правильность введенных данных'
+        ERROR_MESSAGE = 'Проверьте правильность введенных данных'
         username = request.POST.get('username')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
@@ -96,11 +95,11 @@ def bling_signup(request):
         if password == password2:
             try:
                 User.objects.get(username=username)
-                error_message = 'Имя ' + username + ' уже занято'
+                ERROR_MESSAGE = 'Имя ' + username + ' уже занято'
             except User.DoesNotExist:
                 user = User.objects.create_user(username=username, password=password)
                 return redirect('/')
-        return render(request, 'registration/signup.html', context={'error_message': error_message})
+        return render(request, 'registration/signup.html', context={'error_message': ERROR_MESSAGE})
 
 
 def bling_logout(request):
@@ -110,14 +109,19 @@ def bling_logout(request):
 
 @login_required()
 def index(request):
-    scan_for_likes_and_comments(request)
+    if request.method == 'POST':
+        scan_for_forms(request)
+        return HttpResponseRedirect('/')
     blingposts = BlingPost.objects.all()
     context = {'blingposts': blingposts}
     return render(request, 'bling/index.html', context)
 
 
+@login_required()
 def user_profile(request, user_id):
-    scan_for_likes_and_comments(request)
+    if request.method == 'POST':
+        scan_for_forms(request)
+        return HttpResponseRedirect(reverse('user_profile', args=[user_id]))
     blinguser = User.objects.get(username=user_id)
     # get friends list and amount
     friends = blinguser.profile.friends.all()
@@ -154,6 +158,9 @@ def user_profile(request, user_id):
     if subs_amount > 3:
         subs = subs[:3]
 
+    # check last online of profile
+
+
     # UPD: "current user" means request.user
     context = {
         'blinguser': blinguser,
@@ -169,6 +176,7 @@ def user_profile(request, user_id):
     return render(request, 'bling/user_profile.html', context)
 
 
+@login_required()
 def remove_post(request, post_id):
     try:
         # searching for the post with this primary key
@@ -177,6 +185,7 @@ def remove_post(request, post_id):
         post_author = post.author
         if request.user == post_author:
             # if deleting is requested by the author, then it's ok
+
             post.delete()
             # redirecting to the profile of author
             # because we are already there, user won't see the difference, post will just vanish in a moment
@@ -190,6 +199,7 @@ def remove_post(request, post_id):
         return HttpResponseNotFound("<h2>Post not found</h2>")
 
 
+@login_required()
 def subscribe(request, subscribant_username):
     try:
         new_url = '/user/' + subscribant_username + '/'  # firstly make a url to redirect to anytime function needs
@@ -223,6 +233,7 @@ def subscribe(request, subscribant_username):
         return HttpResponseNotFound("<h2>User not found</h2>")
 
 
+@login_required()
 def unsubscribe(request, subscribant_username):
     try:
         new_url = '/user/' + subscribant_username + '/' # firstly make an url to redirect to anytime function needs
