@@ -5,9 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
-from django.views import generic
 from .models import BlingPost, BlingComment, BlingNotification
 from copy import deepcopy
 import datetime
@@ -104,6 +102,14 @@ def scan_for_forms(request):
         # not friends, request.user is just sub-ed to sub-nt, just pure unsubscription
         subscribant_user.profile.subscribers.remove(request.user)
         subscribant_user.profile.create_notification(request.user, 'отписался(-ась) от вас')
+
+    # remove_post button has been pressed
+    elif request.POST.get('remove_post'):
+        post_to_delete = BlingPost.objects.get(pk=int(request.POST.get('remove_post')))
+        if post_to_delete.author == request.user:
+            for comment in post_to_delete.comments.all():
+                comment.delete()
+            post_to_delete.delete()
 
 
 class BlingPostCreateView(LoginRequiredMixin, CreateView):
@@ -223,29 +229,6 @@ def user_profile(request, user_id):
         'is_current_user_friend': is_current_user_friend,
     }
     return render(request, 'bling/user_profile.html', context)
-
-
-@login_required()
-def remove_post(request, post_id):
-    try:
-        # searching for the post with this primary key
-        post = BlingPost.objects.get(pk=int(post_id))
-        # getting the author of the post to approve that the very author is deleting their creation
-        post_author = post.author
-        if request.user == post_author:
-            # if deleting is requested by the author, then it's ok
-
-            post.delete()
-            # redirecting to the profile of author
-            # because we are already there, user won't see the difference, post will just vanish in a moment
-            new_url = '/user/' + post_author.username + '/'
-            return redirect(new_url)
-        else:
-            # deleting is not requested by author. Go away, criminal scum
-            return HttpResponseNotAllowed("<h2>Not allowed</h2>")
-    except BlingPost.DoesNotExist:
-        # no such post, wtf
-        return HttpResponseNotFound("<h2>Post not found</h2>")
 
 
 @login_required()

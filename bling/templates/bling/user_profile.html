@@ -46,6 +46,11 @@
     {% endif %}
 </div>
 
+<br>
+<form method="post">{% csrf_token %}
+    <input type="text" name="new_post" placeholder="Что у вас нового?">
+    <button name="post_id" type="submit" value="{{ blingpost.pk }}">Запостить</button>
+</form>
 <!--posts block-->
 {% for blingpost in blingposts %}
             <div class="post">
@@ -75,7 +80,9 @@
 
                 <!-- author can delete their post -->
                 {% if blinguser.username == user.username %}
-                    <a href="{% url 'remove_post' blingpost.pk %}">Удалить</a>
+                    <form method="post">{% csrf_token %}
+                        <button name="remove_post" value="{{ blingpost.pk }}" type="submit">Удалить</button>
+                    </form>
                 {% endif %}
             </div><br>
         {% endfor %}

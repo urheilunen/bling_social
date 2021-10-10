@@ -55,6 +55,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class BlingPost(models.Model):
+    RENDER_LENGTH = 15
     text = models.TextField(null=True, blank=True, verbose_name='Текст')
     images = models.ForeignKey('BlingImage', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Изображения')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name='Автор', null=True)
@@ -72,8 +73,8 @@ class BlingPost(models.Model):
         return how_old_is_this_datetime(self.created_on)
 
     def __str__(self):
-        if len(self.text) > 10:
-            return self.text[:10] + '...'
+        if len(self.text) > self.RENDER_LENGTH:
+            return self.text[:self.RENDER_LENGTH] + '...'
         else:
             return self.text
 
