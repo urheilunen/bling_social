@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('user/<str:user_id>/', user_profile, name='user_profile'),
+    path('edit_user/<str:user_id>/', edit_user, name='edit_user'),
     path('notifications/', notifications, name='notifications'),
     path('signup/', bling_signup, name='signup'),  # register
     path('signin/', bling_signin, name='signin'),  # login

@@ -198,14 +198,17 @@ def user_profile(request, user_id):
 
     # check if request user is subscribed/friended to this user to decide which button to render
     if request.user in subs:
-        is_current_user_subscribed = True
-        is_current_user_friend = False
+        subscribe_message = 'Отписаться'
+        subscribe_action = 'unsubscribe'
+    elif blinguser in request.user.profile.subscribers.all():
+        subscribe_message = 'Подписаться в ответ'
+        subscribe_action = 'subscribe'
     elif request.user in friends:
-        is_current_user_subscribed = False
-        is_current_user_friend = True
+        subscribe_message = 'Удалить из друзей'
+        subscribe_action = 'unsubscribe'
     else:
-        is_current_user_subscribed = False
-        is_current_user_friend = False
+        subscribe_message = 'Подписаться'
+        subscribe_action = 'subscribe'
 
     # check if friends and subs are more than 3, then they won't fit on the user page
     if friends_amount > 3:
@@ -223,8 +226,8 @@ def user_profile(request, user_id):
         'friends_amount': friends_amount,
         'subs': subs,
         'subs_amount': subs_amount,
-        'is_current_user_subscribed': is_current_user_subscribed,
-        'is_current_user_friend': is_current_user_friend,
+        'subscribe_message': subscribe_message,
+        'subscribe_action': subscribe_action,
     }
     return render(request, 'bling/user_profile.html', context)
 
@@ -246,3 +249,28 @@ def notifications(request):
         'notifications_list': notifications_list,
     }
     return render(request, 'bling/notifications.html', context)
+
+
+@login_required()
+def edit_user(request, user_id):
+    if request.method == 'GET':
+        context = {}
+        return render(request, 'bling/edit_user.html', context)
+    elif request.method == 'POST':
+        if request.POST.get('first_name'):
+            # first name has been changed
+            request.user.first_name = request.POST.get('first_name')
+        if request.POST.get('last_name'):
+            # last name has been changed
+            request.user.last_name = request.POST.get('last_name')
+        if request.POST.get('email'):
+            # email has been changed
+            request.user.email = request.POST.get('email')
+        if request.POST.get('bday'):
+            # bday has been changed
+            request.user.profile.born_on = request.POST.get('bday')
+        if request.POST.get('about'):
+            # "about" has been changed
+            request.user.profile.about = request.POST.get('about')
+        request.user.save()
+        return HttpResponseRedirect(reverse('user_profile', args=[request.user.username]))

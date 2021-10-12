@@ -10,6 +10,7 @@ import datetime
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     born_on = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+    about = models.TextField(default='', blank=True)
     subscribers = models.ManyToManyField(User, blank=True, default=None, verbose_name='Подписчики', related_name='Подписчик')
     friends = models.ManyToManyField(User, blank=True, default=None, verbose_name='Друзья', related_name='Друг')
     profile_image = models.OneToOneField('BlingImage', default=None, null=True, blank=True, verbose_name='Ава', on_delete=models.SET_NULL)

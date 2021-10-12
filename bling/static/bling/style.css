@@ -234,4 +234,5 @@ input .non-original
     background-color: #7777ff;
     width: 50%;
     border-radius: 10px;
+    word-break:break-all;
 }

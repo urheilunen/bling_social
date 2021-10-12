@@ -1,0 +1,31 @@
+{% extends "layout/basic.html" %}
+
+{% block title %} Настройки профиля {% endblock %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <table>
+        <tr>
+            <th><label for="first_name">Имя</label></th>
+            <th><input type="text" name="first_name" id="first_name" placeholder="{{ user.first_name }}"></th>
+        </tr>
+        <tr>
+            <th><label for="last_name">Фамилия</label></th>
+            <th><input type="text" name="last_name" id="last_name" placeholder="{{ user.last_name }}"></th>
+        </tr>
+        <tr>
+            <th><label for="email">E-mail</label></th>
+            <th><input type="email" name="email" id="email" placeholder="{{ user.email }}"></th>
+        </tr>
+        <tr>
+            <th><label for="bday">Дата рождения</label></th>
+            <th><input type="date" name="bday" id="bday" placeholder="{{ user.profile.born_on }}"></th>
+        </tr>
+        <tr>
+            <th><label for="about">О себе</label></th>
+            <th><textarea name="about" id="about" placeholder="{{ user.profile.about }}"></textarea></th>
+            </tr>
+    </table>
+    <input type="submit" placeholder="Изменить"><a href="{% url 'user_profile' user.username %}">Назад в профиль</a>
+</form>
+{% endblock %}

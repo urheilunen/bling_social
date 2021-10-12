@@ -10,21 +10,14 @@
     {% else %}
         <h1>{{ blinguser.username }}</h1>
     {% endif %}
-
+<div style="width: 500px;">{{ blinguser.profile.about }}</div>
+{% if request.user == blinguser %}
+<a href="{% url 'edit_user' blinguser.username %}">Редактировать профиль</a>
+{% endif %}
 <!--now rendering subscribe/unsubscribe button--><br>
 {% if request.user != blinguser %}
     <form method="post">{% csrf_token %}
-
-        {% if is_current_user_subscribed %}
-            <button name="unsubscribe" type="submit" value="{{ blinguser.pk }}">Отменить подписку</button>
-        {% elif is_current_user_friend %}
-            <button name="unsubscribe" type="submit" value="{{ blinguser.pk }}">Удалить из друзей</button>
-        {% elif is_profile_user_subscribed %}
-            <button name="subscribe" type="submit" value="{{ blinguser.pk }}">Подписаться в ответ</button>
-        {% else %}
-            <button name="subscribe" type="submit" value="{{ blinguser.pk }}">Подписаться</button>
-        {% endif %}
-
+        <button name="{{ subscribe_action }}" type="submit" value="{{ blinguser.pk }}">{{ subscribe_message }}</button>
     </form>
 {% endif %}
 
@@ -48,7 +41,8 @@
 
 {% if blinguser.pk == user.pk %}<br>
 <form method="post">{% csrf_token %}
-    <input type="text" name="new_post" placeholder="Что у вас нового?">
+<!--    <input type="text" name="new_post" placeholder="Что у вас нового?">-->
+    <textarea name="new_post" placeholder="Что у вас нового?"></textarea>
     <button name="post_id" type="submit" value="{{ blingpost.pk }}">Запостить</button>
 </form>
 {% endif %}
