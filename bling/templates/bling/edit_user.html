@@ -7,19 +7,15 @@
     <table>
         <tr>
             <th><label for="first_name">Имя</label></th>
-            <th><input type="text" name="first_name" id="first_name" placeholder="{{ user.first_name }}"></th>
+            <th><input type="text" name="first_name" id="first_name" placeholder="{{ user.first_name }}" pattern="[А-ЯA-Z][а-яa-z]+"></th>
         </tr>
         <tr>
             <th><label for="last_name">Фамилия</label></th>
-            <th><input type="text" name="last_name" id="last_name" placeholder="{{ user.last_name }}"></th>
+            <th><input type="text" name="last_name" id="last_name" placeholder="{{ user.last_name }}" pattern="[А-ЯA-Z][а-яa-z]+"></th>
         </tr>
         <tr>
             <th><label for="email">E-mail</label></th>
-            <th><input type="email" name="email" id="email" placeholder="{{ user.email }}"></th>
-        </tr>
-        <tr>
-            <th><label for="bday">Дата рождения</label></th>
-            <th><input type="date" name="bday" id="bday" placeholder="{{ user.profile.born_on }}"></th>
+            <th><input type="email" name="email" id="email" placeholder="{{ user.email }}" pattern="[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"></th>
         </tr>
         <tr>
             <th><label for="about">О себе</label></th>

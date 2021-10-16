@@ -40,8 +40,7 @@ def scan_for_forms(request):
         commented_post.comments.add(new_comment)
         commented_post.comments_amount = len(commented_post.comments.all())
         commented_post.save()
-        if request.user != commented_post.author:
-            commented_post.author.profile.create_notification(request.user, 'оставил(-а) комментарий под вашим постом',
+        commented_post.author.profile.create_notification(request.user, 'оставил(-а) комментарий под вашим постом',
                                                               related_post=commented_post)
 
     # new post has been created

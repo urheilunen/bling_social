@@ -20,7 +20,7 @@
         <p>{{ error_message }}</p>
         <form method="post">
              {% csrf_token %}
-            <p><input class="non-original" name="username" id="username" placeholder="Ник" class="loginform"></p>
+            <p><input class="non-original" name="username" id="username" placeholder="Ник (латиница и цифры)" class="loginform" pattern="[A-Za-z0-9]{4,40}"></p>
 <!--            <p><input name="email" id="email" placeholder="E-mail" class="loginform"></p>-->
             <p><input class="non-original" type='password' name="password" id="password" placeholder="Пароль" class="passwordform"></p>
             <p><input class="non-original" type='password' name="password2" id="password2" placeholder="Повторите пароль" class="passwordform"></p>

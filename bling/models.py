@@ -3,13 +3,12 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from .functions import how_old_is_this_datetime
+from .functions import how_old_is_this_datetimefield
 import datetime
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    born_on = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     about = models.TextField(default='', blank=True)
     subscribers = models.ManyToManyField(User, blank=True, default=None, verbose_name='Подписчики', related_name='Подписчик')
     friends = models.ManyToManyField(User, blank=True, default=None, verbose_name='Друзья', related_name='Друг')
@@ -27,7 +26,9 @@ class Profile(models.Model):
             return self.user.username
 
     def create_notification(self, sender, text, related_post=None):
-        if related_post is not None:
+        if sender == self.user:
+            return 0
+        elif related_post is not None:
             notification0 = BlingNotification(target_user=self.user, sender=sender, related_post=related_post, text=text)
             self.notifications_amount += 1
             notification0.save()
@@ -71,7 +72,7 @@ class BlingPost(models.Model):
         ordering = ['-created_on']
 
     def how_old(self):
-        return how_old_is_this_datetime(self.created_on)
+        return how_old_is_this_datetimefield(self.created_on)
 
     def __str__(self):
         if len(self.text) > self.RENDER_LENGTH:
@@ -96,7 +97,7 @@ class BlingComment(models.Model):
         return self.text
 
     def how_old(self):
-        return how_old_is_this_datetime(self.created_on)
+        return how_old_is_this_datetimefield(self.created_on)
 
 
 class BlingImage(models.Model):
@@ -123,42 +124,4 @@ class BlingNotification(models.Model):
         ordering = ['-created_on']
 
     def how_old(self):
-        # generating the list of each unit of notification's age
-        date_list = [
-            datetime.datetime.now(datetime.timezone.utc).year - self.created_on.year,
-            datetime.datetime.now(datetime.timezone.utc).month - self.created_on.month,
-            datetime.datetime.now(datetime.timezone.utc).day - self.created_on.day,
-            datetime.datetime.now(datetime.timezone.utc).hour - self.created_on.hour,
-            datetime.datetime.now(datetime.timezone.utc).minute - self.created_on.minute,
-            datetime.datetime.now(datetime.timezone.utc).second - self.created_on.second
-        ]
-        declension_list = [
-            ['год', 'года', 'лет'],
-            ['месяц', 'месяца', 'месяцев'],
-            ['день', 'дня', 'дней'],
-            ['час', 'часа', 'часов'],
-            ['минуту', 'минуты', 'минут'],
-            ['секунду', 'секунды', 'секунд']
-        ]
-
-        def get_declension(num):
-            if 5 <= num <= 19:
-                return 2
-            elif num % 10 == 1:
-                return 0
-            elif 2 <= (num % 10) <= 4:
-                return 1
-            else:
-                return 2
-
-        age = ''
-
-        for i in range(6):
-            if date_list[i] == 0:
-                pass
-            else:
-                # describe all russian words to every kind of number and datetime attribute name
-                age = str(date_list[i]) + ' ' + declension_list[i][get_declension(date_list[i])]
-                break
-
-        return age
+        return how_old_is_this_datetimefield(self.created_on)
