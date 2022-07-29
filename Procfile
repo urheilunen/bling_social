@@ -1,0 +1,1 @@
+web: gunicorn bling_social.wsgi --log-file -
