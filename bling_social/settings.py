@@ -131,7 +131,7 @@ LOGIN_URL = 'signin'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_ROOT = BASE_DIR / 'bling/static/'
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = BASE_DIR / 'media/'
